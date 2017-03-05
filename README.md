@@ -1,5 +1,7 @@
 ## decrunch
 
+decrunch is a Python wrapper around [crunch's](https://github.com/BinomialLLC/crunch) decompressor.
+
 ### Setup
 
 ```sh
