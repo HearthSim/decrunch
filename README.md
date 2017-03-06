@@ -1,4 +1,5 @@
 ## decrunch
+[![Build Status](https://api.travis-ci.org/HearthSim/decrunch.svg?branch=master)](https://travis-ci.org/HearthSim/decrunch)
 
 decrunch is a Python wrapper around [crunch's](https://github.com/BinomialLLC/crunch) decompressor.
 
