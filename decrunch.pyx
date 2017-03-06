@@ -1,7 +1,3 @@
-# distutils: language = c++
-# distutils: include_dirs = crunch
-# distutils: sources = crn_decomp.cpp
-
 from enum import IntEnum
 
 

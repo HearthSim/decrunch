@@ -1,0 +1,2 @@
+include crunch/*.h
+include *.h *.pyx *.cpp
