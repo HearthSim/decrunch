@@ -4,10 +4,12 @@
 
 from enum import Enum
 
-"""
-Crunch format (what block-compressed texture format this decodes to)
-"""
+
 class Format(Enum):
+	"""
+	Crunch format (what block-compressed texture format this decodes to)
+	"""
+
 	Invalid = -1
 	DXT1 = 0
 	DXT3 = 1
@@ -50,6 +52,7 @@ cdef extern from "crunch.h" namespace "crnd":
 		uint32      m_userdata0
 		uint32      m_userdata1
 		crn_format  m_format
+
 	int crnd_get_texture_info(const void* pData, uint32 data_size, crn_texture_info* pTexture_info)
 
 	struct crn_level_info:
@@ -61,6 +64,7 @@ cdef extern from "crunch.h" namespace "crnd":
 		uint32      m_blocks_y
 		uint32      m_bytes_per_block
 		crn_format  m_format
+
 	int crnd_get_level_info(const void* pData, uint32 data_size, uint32 level_index, crn_level_info* pLevel_info)
 
 	ctypedef void *crnd_unpack_context
@@ -71,12 +75,16 @@ cdef extern from "crunch.h" namespace "crnd":
 
 cdef class UnpackContext:
 	cdef crnd_unpack_context ctx
+
 	def __cinit__(self):
 		self.ctx = NULL
+
 	def __dealloc__(self):
 		crnd_unpack_end(self.ctx)
+
 	def begin(self, buf):
 		self.ctx = crnd_unpack_begin(<unsigned char *>buf, <uint32>len(buf))
+
 	def unpack_level(self, dst, row_pitch_in_bytes, level_index):
 		cdef void *ppDst[6]
 		ppDst[0] = <unsigned char *>dst
@@ -88,48 +96,52 @@ class File:
 		self.buf = buf
 		self.ctx = UnpackContext()
 		self.ctx.begin(buf)
-	
+
 	def info(self, level=None):
-		if level != None:
+		if level is not None:
 			return self.level_info(level)
 		else:
 			return self.texture_info()
-	
+
 	def texture_info(self):
 		cdef crn_texture_info texture_info
 		if crnd_get_texture_info(<unsigned char *>self.buf, <uint32>len(self.buf), &texture_info) == 0:
-			return None
+			return
+
 		return {
-			'width': texture_info.m_width,
-			'height': texture_info.m_height,
-			'levels': texture_info.m_levels,
-			'faces': texture_info.m_faces,
-			'bytes_per_block': texture_info.m_bytes_per_block,
-			'userdata0': texture_info.m_userdata0,
-			'userdata1': texture_info.m_userdata1,
-			'format': Format(texture_info.m_format),
+			"width": texture_info.m_width,
+			"height": texture_info.m_height,
+			"levels": texture_info.m_levels,
+			"faces": texture_info.m_faces,
+			"bytes_per_block": texture_info.m_bytes_per_block,
+			"userdata0": texture_info.m_userdata0,
+			"userdata1": texture_info.m_userdata1,
+			"format": Format(texture_info.m_format),
 		}
-	
+
 	def level_info(self, level):
 		cdef crn_level_info level_info
 		if crnd_get_level_info(<unsigned char *>self.buf, <uint32>len(self.buf), <uint32>int(level), &level_info) == 0:
-			return None
+			return
+
 		return {
-			'width': level_info.m_width,
-			'height': level_info.m_height,
-			'faces': level_info.m_faces,
-			'blocks_x': level_info.m_blocks_x,
-			'blocks_y': level_info.m_blocks_y,
-			'bytes_per_block': level_info.m_bytes_per_block,
-			'format': Format(level_info.m_format),
+			"width": level_info.m_width,
+			"height": level_info.m_height,
+			"faces": level_info.m_faces,
+			"blocks_x": level_info.m_blocks_x,
+			"blocks_y": level_info.m_blocks_y,
+			"bytes_per_block": level_info.m_bytes_per_block,
+			"format": Format(level_info.m_format),
 		}
-	
+
 	def decode_level(self, level):
 		info = self.level_info(level)
-		blocks_x = info['blocks_x']
-		blocks_y = info['blocks_y']
-		bpb = info['bytes_per_block']
+		blocks_x = info["blocks_x"]
+		blocks_y = info["blocks_y"]
+		bpb = info["bytes_per_block"]
 		dst = bytearray(bpb * blocks_x * blocks_y)
+
 		if self.ctx.unpack_level(dst, blocks_x * bpb, level) == 0:
-			return None
+			return
+
 		return dst
