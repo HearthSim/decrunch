@@ -2,10 +2,10 @@
 # distutils: include_dirs = crunch
 # distutils: sources = crn_decomp.cpp
 
-from enum import Enum
+from enum import IntEnum
 
 
-class Format(Enum):
+class Format(IntEnum):
 	"""
 	Crunch format (what block-compressed texture format this decodes to)
 	"""
