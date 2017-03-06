@@ -13,10 +13,17 @@ python setup.py install
 ```py
 import decrunch
 
-buf = open('example.crn', 'rb').read()
+with open("example.crn", "rb") as f:
+	buf = f.read()
+
 fi = decrunch.File(buf)
-print("texture info:", fi.info())
-open('out.bc1', 'wb').write(fi.decode_level(0))
+tex_info = fi.info()
+
+for level in range(tex_info["levels"]):
+	print("Level info %i: %r" % (level, fi.info(level)))
+
+with open("out.bc1", "wb") as f:
+	f.write(fi.decode_level(0))
 ```
 
 Further image decoding requires a DXTn decompressor, such as the one that
