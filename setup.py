@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 
-from distutils.core import setup
-from distutils.extension import Extension
+from setuptools import setup
+from setuptools.extension import Extension
 from Cython.Build import cythonize
+
 
 ext = Extension(
 	"decrunch",
