@@ -3,11 +3,12 @@
 
 decrunch is a Python wrapper around [crunch's](https://github.com/BinomialLLC/crunch) decompressor.
 
+
 ### Setup
 
-```sh
-python setup.py install
-```
+- To install directly from PyPI: `pip install decrunch`
+- To install from source: `pip install Cython`, then `./setup.py install`
+
 
 ### Usage
 
