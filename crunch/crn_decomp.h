@@ -315,8 +315,11 @@ namespace crnd
 
 #include <stdlib.h>
 #include <stdio.h>
-#ifdef WIN32
+#if defined(WIN32)
 #include <memory.h>
+#elif defined(__APPLE__)
+#include <malloc/malloc.h>
+#define malloc_usable_size malloc_size
 #else
 #include <malloc.h>
 #endif
