@@ -22,4 +22,4 @@ if cythonize:
 	extensions = cythonize(extensions)
 
 
-setup(ext_modules=extensions)
+setup(ext_modules=extensions, name="decrunch")
