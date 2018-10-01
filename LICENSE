@@ -1,11 +1,3 @@
-See crunch/license.txt for the license of files in crunch.
-
-The files in crunch are an unaltered subset of the original code; the
-entirety of crunch may be obtained at <https://github.com/BinomialLLC/crunch>.
-
-
-decrunch uses a zlib license:
-
 Copyright (c) 2017 Robert Nix
 
 This software is provided 'as-is', without any express or implied
