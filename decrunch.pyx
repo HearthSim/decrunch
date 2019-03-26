@@ -25,6 +25,10 @@ class Format(IntEnum):
 	DXT5A = 9
 
 	ETC1 = 10
+	ETC2 = 11
+	ETC2A = 12
+	ETC1S = 13
+	ETC2AS = 14
 
 
 cdef extern from "crunch.h":

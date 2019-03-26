@@ -73,6 +73,10 @@ enum crn_format {
 	cCRNFmtDXT5A,
 
 	cCRNFmtETC1,
+	cCRNFmtETC2,
+	cCRNFmtETC2A,
+	cCRNFmtETC1S,
+	cCRNFmtETC2AS,
 
 	cCRNFmtTotal,
 
@@ -90,7 +94,7 @@ enum crn_limits {
 	cCRNMaxFaces = 6,
 	cCRNMaxLevels = 16,
 
-	cCRNMaxHelperThreads = 16,
+	cCRNMaxHelperThreads = 15,
 
 	cCRNMinQualityLevel = 0,
 	cCRNMaxQualityLevel = 255
@@ -101,33 +105,33 @@ enum crn_limits {
 enum crn_comp_flags {
 	// Enables perceptual colorspace distance metrics if set.
 	// Important: Be sure to disable this when compressing non-sRGB colorspace images,
-	// like
-	// normal maps! Default: Set
+	// like normal maps!
+	// Default: Set
 	cCRNCompFlagPerceptual = 1,
 
 	// Enables (up to) 8x8 macroblock usage if set. If disabled, only 4x4 blocks are
 	// allowed.
 	// Compression ratio will be lower when disabled, but may cut down on blocky
-	// artifacts
-	// because the process used to determine where large macroblocks can be used without
-	// artifacts isn't perfect. Default: Set.
+	// artifacts because the process used to determine
+	// where large macroblocks can be used without artifacts isn't perfect.
+	// Default: Set.
 	cCRNCompFlagHierarchical = 2,
 
 	// cCRNCompFlagQuick disables several output file optimizations - intended for
-	// things like
-	// quicker previews. Default: Not set.
+	// things like quicker previews.
+	// Default: Not set.
 	cCRNCompFlagQuick = 4,
 
 	// DXT1: OK to use DXT1 alpha blocks for better quality or DXT1A transparency.
 	// DXT5: OK to use both DXT5 block types.
 	// Currently only used when writing to .DDS files, as .CRN uses only a subset of the
-	// possible DXTn block types. Default: Set.
+	// possible DXTn block types.
+	// Default: Set.
 	cCRNCompFlagUseBothBlockTypes = 8,
 
 	// OK to use DXT1A transparent indices to encode black (assumes pixel shader ignores
-	// fetched
-	// alpha). Currently only used when writing to .DDS files, .CRN never uses alpha
-	// blocks.
+	// fetched alpha).
+	// Currently only used when writing to .DDS files, .CRN never uses alpha blocks.
 	// Default: Not set.
 	cCRNCompFlagUseTransparentIndicesForBlack = 16,
 
@@ -137,8 +141,8 @@ enum crn_comp_flags {
 	cCRNCompFlagDisableEndpointCaching = 32,
 
 	// If enabled, use the cCRNColorEndpointPaletteSize, etc. params to control the CRN
-	// palette
-	// sizes. Only useful when writing to .CRN files. Default: Not set.
+	// palette sizes. Only useful when writing to .CRN files.
+	// Default: Not set.
 	cCRNCompFlagManualPaletteSizes = 64,
 
 	// If enabled, DXT1A alpha blocks are used to encode single bit transparency.
@@ -146,16 +150,12 @@ enum crn_comp_flags {
 	cCRNCompFlagDXT1AForTransparency = 128,
 
 	// If enabled, the DXT1 compressor's color distance metric assumes the pixel shader
-	// will be
-	// converting the fetched RGB results to luma (Y part of YCbCr). This increases
-	// quality when
-	// compressing grayscale images, because the compressor can spread the luma error
-	// amoung all
-	// three channels (i.e. it can generate blocks with some chroma present if doing so
-	// will
-	// ultimately lead to lower luma error). Only enable on grayscale source images.
-	// Default:
-	// Not set.
+	// will be converting the fetched RGB results to luma (Y part of YCbCr).
+	// This increases quality when compressing grayscale images, because the compressor
+	// can spread the luma error amoung all three channels (i.e. it can generate blocks
+	// with some chroma present if doing so will ultimately lead to lower luma error).
+	// Only enable on grayscale source images.
+	// Default: Not set.
 	cCRNCompFlagGrayscaleSampling = 256,
 
 	// If enabled, debug information will be output during compression.
@@ -568,8 +568,8 @@ void crn_free_block(void *pBlock);
 //  DXT quality level. A "clustered" DDS file is compressed using clustered DXTn
 //  compression to either the target bitrate or the specified integer quality factor.
 //  The output file is a standard DX9 format DDS file, except the compressor assumes you
-//  will be later losslessly compressing the DDS output file using the LZMA algorithm. A
-//  texture is defined as an array of 1 or 6 "faces" (6 faces=cubemap), where each
+//  will be later losslessly compressing the DDS output file using the LZMA algorithm.
+//  A texture is defined as an array of 1 or 6 "faces" (6 faces=cubemap), where each
 //  "face" consists of between [1,cCRNMaxLevels] mipmap levels. Mipmap levels are simple
 //  32-bit 2D images with a pitch of width*sizeof(uint32), arranged in the usual raster
 //  order (top scanline first). The image pixels may be grayscale (YYYX bytes in
