@@ -1,30 +1,33 @@
 # https://travis-ci.org/HearthSim/decrunch
-sudo: false
+dist: xenial
 language: python
+
 python:
   - 3.4
   - 3.6
-cache:
-  directories:
-    - $HOME/.pip-cache/
-    - $HOME/virtualenv/python3.4
-    - $HOME/virtualenv/python3.6
+  - 3.7
+
+cache: pip
+
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - g++-8
+
+env:
+  - CXX=g++-8
+
 install:
-  - pip install --upgrade pip
+  - pip install --upgrade pip wheel setuptools
   - pip install Cython
   - pip install .
+
 script:
-  - py.test -v
+  - pytest -v
+
 notifications:
   email:
     on_failure: always
     on_success: change
-  irc:
-    channels:
-      - "chat.freenode.net#hearthsim-commits"
-    use_notice: true
-    skip_join: true
-    on_failure: always
-    on_success: change
-    template:
-      - "(%{branch} @ %{commit} : %{author}): %{message} %{build_url}"
