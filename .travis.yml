@@ -1,23 +1,51 @@
 # https://travis-ci.org/HearthSim/decrunch
 dist: xenial
 language: python
-
-python:
-  - 3.5
-  - 3.6
-  - 3.7
-
 cache: pip
+
+matrix:
+  include:
+    - os: linux
+      python: 3.5
+      env: CXX=g++-8
+    - os: linux
+      python: 3.6
+      env: CXX=g++-8
+    - os: linux
+      python: 3.7
+      env: CXX=g++-8
+    - os: osx
+      language: generic
+      env: CXX=g++-8 PYTHON_VERSION=3.5.7
+    - os: osx
+      language: generic
+      env: CXX=g++-8 PYTHON_VERSION=3.6.8
+    - os: osx
+      language: generic
+      env: CXX=g++-8 PYTHON_VERSION=3.7.3
 
 addons:
   apt:
+    update: true
     sources:
       - ubuntu-toolchain-r-test
     packages:
       - g++-8
+  homebrew:
+    update: true
+    packages:
+      - pyenv
 
-env:
-  - CXX=g++-8
+before_install:
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then pyenv install "$PYTHON_VERSION"; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then pyenv global "$PYTHON_VERSION"; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then export PYENV_ROOT="$HOME/.pyenv"; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then export PATH="$PYENV_ROOT/bin:$PATH"; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then eval "$(pyenv init -)"; fi
+  - which python
+  - python -V
+  - which pip
+  - pip -V
 
 install:
   - pip install --upgrade pip wheel setuptools
