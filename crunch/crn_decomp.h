@@ -341,6 +341,8 @@ const unsigned int cCRNHeaderMinSize = 62U;
 #include <stdlib.h>
 #ifdef WIN32
 #include <memory.h>
+#elif defined __APPLE__
+#include <malloc/malloc.h>
 #else
 #include <malloc.h>
 #endif
@@ -401,6 +403,8 @@ const uint32 cIntBits = 32U;
 typedef uint64 ptr_bits;
 #else
 #ifdef __x86_64__
+typedef uint64 ptr_bits;
+#elif defined __APPLE__
 typedef uint64 ptr_bits;
 #else
 typedef uint32 ptr_bits;
