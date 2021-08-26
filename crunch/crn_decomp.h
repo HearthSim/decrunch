@@ -27,27 +27,42 @@
 #define CRND_BUILD_RELEASE
 #endif
 
+#include <cstdint>
+
 // CRN decompression API
 namespace crnd {
-typedef unsigned char uint8;
-typedef signed char int8;
-typedef unsigned short uint16;
-typedef signed short int16;
-typedef unsigned int uint32;
-typedef uint32 uint32;
+
+// Araragi Hokuto 2020/09/22: better to use stdint.h
+// typedef unsigned char uint8;
+// typedef signed char int8;
+// typedef unsigned short uint16;
+// typedef signed short int16;
+// typedef unsigned int uint32;
+// typedef uint32 uint32;
+// typedef unsigned int uint;
+// typedef signed int int32;
+// #ifdef __GNUC__
+// typedef unsigned long long uint64;
+// typedef long long int64;
+// #else
+// typedef unsigned __int64 uint64;
+// typedef signed __int64 int64;
+// #endif
+
+typedef std::uint8_t uint8;
+typedef std::int8_t int8;
+typedef std::uint16_t uint16;
+typedef std::int16_t int16;
+typedef std::uint32_t uint32;
+typedef std::int32_t int32;
+typedef std::uint64_t uint64;
+typedef std::int64_t int64;
+
 typedef unsigned int uint;
-typedef signed int int32;
-#ifdef __GNUC__
-typedef unsigned long long uint64;
-typedef long long int64;
-#else
-typedef unsigned __int64 uint64;
-typedef signed __int64 int64;
-#endif
 
 // The crnd library assumes all allocation blocks have at least CRND_MIN_ALLOC_ALIGNMENT
 // alignment.
-const uint32 CRND_MIN_ALLOC_ALIGNMENT = sizeof(uint32) * 2U;
+const std::uintptr_t CRND_MIN_ALLOC_ALIGNMENT = sizeof(uint32) * 2U;
 
 // realloc callback:
 // Used to allocate, resize, or free memory blocks.
@@ -566,8 +581,8 @@ CRND_DEFINE_BUILT_IN_TYPE(int)
 CRND_DEFINE_BUILT_IN_TYPE(unsigned int)
 CRND_DEFINE_BUILT_IN_TYPE(long)
 CRND_DEFINE_BUILT_IN_TYPE(unsigned long)
-CRND_DEFINE_BUILT_IN_TYPE(int64)
-CRND_DEFINE_BUILT_IN_TYPE(uint64)
+CRND_DEFINE_BUILT_IN_TYPE(long long)
+CRND_DEFINE_BUILT_IN_TYPE(unsigned long long)
 CRND_DEFINE_BUILT_IN_TYPE(float)
 CRND_DEFINE_BUILT_IN_TYPE(double)
 CRND_DEFINE_BUILT_IN_TYPE(long double)
@@ -2344,13 +2359,13 @@ void *crnd_malloc(size_t size, size_t *pActual_size) {
 		return NULL;
 	}
 
-	CRND_ASSERT(((uint32)p_new & (CRND_MIN_ALLOC_ALIGNMENT - 1)) == 0);
+	CRND_ASSERT(((std::uintptr_t)p_new & (CRND_MIN_ALLOC_ALIGNMENT - 1)) == 0);
 
 	return p_new;
 }
 
 void *crnd_realloc(void *p, size_t size, size_t *pActual_size, bool movable) {
-	if ((uint32) reinterpret_cast<ptr_bits>(p) & (CRND_MIN_ALLOC_ALIGNMENT - 1)) {
+	if ((std::uintptr_t) reinterpret_cast<ptr_bits>(p) & (CRND_MIN_ALLOC_ALIGNMENT - 1)) {
 		crnd_mem_error("crnd_realloc: bad ptr");
 		return NULL;
 	}
@@ -2366,7 +2381,7 @@ void *crnd_realloc(void *p, size_t size, size_t *pActual_size, bool movable) {
 	if (pActual_size)
 		*pActual_size = actual_size;
 
-	CRND_ASSERT(((uint32)p_new & (CRND_MIN_ALLOC_ALIGNMENT - 1)) == 0);
+	CRND_ASSERT(((std::uintptr_t)p_new & (CRND_MIN_ALLOC_ALIGNMENT - 1)) == 0);
 
 	return p_new;
 }
