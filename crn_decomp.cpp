@@ -4,6 +4,7 @@
 
 #if defined(__APPLE__)
 #define malloc_usable_size malloc_size
+#include <malloc/malloc.h>
 #else
 #if defined(__FreeBSD__)
 #include <stdlib.h>
